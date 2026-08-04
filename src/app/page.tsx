@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { signOut } from "./login/actions";
+import { TopNav } from "@/components/TopNav";
+import { Analyzer } from "@/components/Analyzer";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -8,44 +9,81 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 px-6 font-sans dark:bg-black">
-      <main className="flex w-full max-w-2xl flex-col items-center gap-6 text-center">
-        <span className="rounded-full border border-black/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-zinc-500 dark:border-white/15 dark:text-zinc-400">
-          MVP · Phase 0
-        </span>
-        <h1 className="text-4xl font-semibold tracking-tight text-black sm:text-5xl dark:text-zinc-50">
-          ResearchCanvas
-        </h1>
-        <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-          Turn a research paper into an interactive, visual dashboard —
-          executive summary, key findings, charts, causal flows, and evidence
-          you can trace.
-        </p>
-
-        {user ? (
-          <div className="flex flex-col items-center gap-3">
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Signed in as{" "}
-              <span className="font-medium text-zinc-700 dark:text-zinc-200">
-                {user.email}
-              </span>
-            </p>
-            <form action={signOut}>
-              <button className="rounded-full border border-black/15 px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-black/5 dark:border-white/20 dark:text-zinc-50 dark:hover:bg-white/10">
-                Sign out
-              </button>
-            </form>
-          </div>
-        ) : (
+  if (!user) {
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center px-6">
+        <main className="flex w-full max-w-2xl flex-col items-center gap-6 text-center">
+          <span className="font-mono text-xs uppercase tracking-widest text-muted">
+            MVP
+          </span>
+          <h1 className="font-serif text-5xl tracking-tight text-text">
+            ResearchCanvas
+          </h1>
+          <p className="max-w-md text-lg leading-8 text-muted">
+            Turn a research paper into an interactive, visual dashboard —
+            summary, key findings, charts, causal flows, and evidence you can
+            trace.
+          </p>
           <Link
             href="/login"
-            className="rounded-full bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+            className="rounded-full bg-accent px-5 py-2.5 font-mono text-sm text-white hover:opacity-90"
           >
             Sign in to get started
           </Link>
-        )}
+        </main>
+      </div>
+    );
+  }
+
+  const { data: papers } = await supabase
+    .from("papers")
+    .select("id, title, created_at")
+    .order("created_at", { ascending: false })
+    .limit(8);
+
+  return (
+    <>
+      <TopNav email={user.email} />
+      <main className="mx-auto w-full max-w-3xl px-6 py-16">
+        <h1 className="text-center font-serif text-4xl text-text">
+          Analyze a paper
+        </h1>
+        <p className="mx-auto mt-2 max-w-lg text-center text-muted">
+          Upload a PDF, paste a DOI, or drop a PubMed link to generate an
+          interactive summary.
+        </p>
+
+        <div className="mt-10">
+          <Analyzer />
+        </div>
+
+        <div className="mt-16 border-t border-border pt-8">
+          <h2 className="font-mono text-xs uppercase tracking-wider text-muted">
+            Recent
+          </h2>
+          {papers && papers.length > 0 ? (
+            <ul className="mt-4 flex flex-col divide-y divide-border">
+              {papers.map((p) => (
+                <li key={p.id}>
+                  <Link
+                    href={`/paper/${p.id}`}
+                    className="flex items-center justify-between gap-4 py-3 hover:opacity-80"
+                  >
+                    <span className="text-sm text-text">{p.title}</span>
+                    <span className="shrink-0 font-mono text-xs uppercase text-muted">
+                      {new Date(p.created_at).toLocaleDateString()}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-3 text-muted">
+              No papers yet — upload one to get started.
+            </p>
+          )}
+        </div>
       </main>
-    </div>
+    </>
   );
 }
