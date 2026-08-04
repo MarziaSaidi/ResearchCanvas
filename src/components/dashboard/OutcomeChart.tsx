@@ -42,7 +42,10 @@ export function OutcomeChart({ chart }: { chart: Chart }) {
               <LabelList
                 dataKey="value"
                 position="top"
-                formatter={(v: number) => `${v > 0 ? "+" : ""}${v}%`}
+                formatter={(v) => {
+                  const n = Number(v);
+                  return `${n > 0 ? "+" : ""}${n}%`;
+                }}
                 style={{ fill: "var(--text)", fontSize: 12, fontFamily: "var(--font-mono)" }}
               />
             </Bar>
