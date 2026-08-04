@@ -113,9 +113,10 @@ export function Analyzer() {
           setDragging(false);
           onFile(e.dataTransfer.files?.[0]);
         }}
-        className={`flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed py-16 transition-colors ${
-          dragging ? "border-accent bg-accent/5" : "border-border"
+        className={`flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed py-16 backdrop-blur-md transition-colors ${
+          dragging ? "border-accent" : "border-border"
         }`}
+        style={{ background: "var(--surface)" }}
       >
         <span className="text-2xl text-muted" aria-hidden>
           ⭱

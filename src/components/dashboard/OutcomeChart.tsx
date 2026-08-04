@@ -13,8 +13,8 @@ import {
 import type { Chart } from "@/lib/schema";
 
 export function OutcomeChart({ chart }: { chart: Chart }) {
-  const positive = "#1d9e75";
-  const negative = "#2b44ff";
+  const positive = "var(--accent)";
+  const negative = "#b45f14";
 
   return (
     <div className="w-full">

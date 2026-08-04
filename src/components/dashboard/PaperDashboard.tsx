@@ -1,13 +1,14 @@
 import type { PaperInsights, StatCard as StatCardType, Confidence } from "@/lib/schema";
 import { OutcomeChart } from "./OutcomeChart";
 import { Limitations } from "./Limitations";
+import { EvidenceScore } from "./EvidenceScore";
 
-const STAT_COLORS = ["#2b44ff", "#1d9e75", "#c9822a", "#7a5bd0"];
+const STAT_COLORS = ["#d9781f", "#b45f14", "#c98a2a", "#8a5a20"];
 
-const BADGE: Record<Confidence, { bg: string; fg: string }> = {
-  high: { bg: "var(--hi-bg)", fg: "var(--hi-fg)" },
-  moderate: { bg: "var(--mod-bg)", fg: "var(--mod-fg)" },
-  low: { bg: "var(--lo-bg)", fg: "var(--lo-fg)" },
+const CONF_WEIGHT: Record<Confidence, number> = {
+  high: 1,
+  moderate: 0.66,
+  low: 0.33,
 };
 
 function Section({
@@ -32,9 +33,9 @@ function Section({
 
 function StatCard({ stat, color }: { stat: StatCardType; color: string }) {
   const arrow = stat.direction === "up" ? "↑" : stat.direction === "down" ? "↓" : "";
-  const badge = BADGE[stat.confidence];
+  const pct = CONF_WEIGHT[stat.confidence] * 100;
   return (
-    <div className="flex flex-col justify-between rounded-xl border border-border bg-surface p-5">
+    <div className="glass flex flex-col justify-between rounded-2xl p-5">
       <div>
         <div className="flex items-baseline gap-1 font-serif text-4xl" style={{ color }}>
           {stat.value}
@@ -42,13 +43,20 @@ function StatCard({ stat, color }: { stat: StatCardType; color: string }) {
         </div>
         <div className="mt-2 text-sm text-muted">{stat.label}</div>
       </div>
-      <div className="mt-4">
-        <span
-          className="inline-block rounded px-2 py-1 font-mono text-[10px] uppercase tracking-wide"
-          style={{ backgroundColor: badge.bg, color: badge.fg }}
+      <div className="mt-5">
+        <div className="mb-1 flex justify-between font-mono text-[10px] uppercase tracking-wide text-muted">
+          <span>Confidence</span>
+          <span>{stat.confidence}</span>
+        </div>
+        <div
+          className="h-1.5 w-full overflow-hidden rounded-full"
+          style={{ background: "var(--glass-border)" }}
         >
-          {stat.confidence}
-        </span>
+          <div
+            className="h-full rounded-full"
+            style={{ width: `${pct}%`, background: "var(--accent)" }}
+          />
+        </div>
       </div>
     </div>
   );
@@ -61,7 +69,7 @@ function CausalFlow({ nodes, note }: PaperInsights["causalChain"]) {
       <div className="flex items-stretch gap-2 overflow-x-auto pb-2">
         {nodes.map((node, i) => (
           <div key={i} className="flex items-center gap-2">
-            <div className="min-w-[160px] max-w-[200px] rounded-xl border border-border bg-surface p-4">
+            <div className="glass min-w-[160px] max-w-[200px] rounded-2xl p-4">
               <div className="text-sm font-medium text-text">{node.label}</div>
               {node.detail && (
                 <div className="mt-1 font-mono text-xs text-muted">{node.detail}</div>
@@ -107,17 +115,32 @@ export function PaperDashboard({
   insights: PaperInsights;
   analyzedAt?: string;
 }) {
+  const score =
+    insights.statCards.length > 0
+      ? (insights.statCards.reduce((a, s) => a + CONF_WEIGHT[s.confidence], 0) /
+          insights.statCards.length) *
+        10
+      : null;
+
   return (
     <article className="mx-auto w-full max-w-3xl px-6 py-14">
-      <MetaLine meta={insights.meta} />
-
-      <h1 className="mt-4 font-serif text-4xl leading-tight text-text sm:text-5xl">
-        {insights.title}
-      </h1>
+      <div className="flex items-start justify-between gap-6">
+        <div className="flex-1">
+          <MetaLine meta={insights.meta} />
+          <h1 className="mt-4 font-serif text-4xl leading-tight text-text sm:text-5xl">
+            {insights.title}
+          </h1>
+        </div>
+        {score !== null && (
+          <div className="hidden shrink-0 sm:block">
+            <EvidenceScore score={score} />
+          </div>
+        )}
+      </div>
 
       {insights.isHealthRelated && (
         <div
-          className="mt-6 rounded-lg px-4 py-3 text-sm"
+          className="mt-6 rounded-xl px-4 py-3 text-sm"
           style={{ backgroundColor: "var(--mod-bg)", color: "var(--mod-fg)" }}
         >
           <span className="font-medium">Summarizes research — not medical advice.</span>{" "}
@@ -126,7 +149,7 @@ export function PaperDashboard({
       )}
 
       <Section n="01" title="Executive summary">
-        <div className="rounded-xl border border-border bg-surface p-6 text-[15px] leading-relaxed text-text">
+        <div className="glass rounded-2xl p-6 text-[15px] leading-relaxed text-text">
           {insights.executiveSummary}
         </div>
       </Section>
@@ -169,7 +192,7 @@ export function PaperDashboard({
               {insights.chart.subtitle}
             </p>
           )}
-          <div className="rounded-xl border border-border bg-surface p-5">
+          <div className="glass rounded-2xl p-5">
             <OutcomeChart chart={insights.chart} />
           </div>
         </Section>
@@ -182,9 +205,7 @@ export function PaperDashboard({
       )}
 
       <footer className="mt-16 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6 font-mono text-xs uppercase tracking-wide text-muted">
-        <span>
-          ResearchCanvas{analyzedAt ? ` · Analyzed ${analyzedAt}` : ""}
-        </span>
+        <span>ResearchCanvas{analyzedAt ? ` · Analyzed ${analyzedAt}` : ""}</span>
         <a href="/" className="text-accent">
           ↑ Analyze another
         </a>

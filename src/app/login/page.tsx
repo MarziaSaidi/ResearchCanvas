@@ -6,52 +6,62 @@ export default async function LoginPage(props: {
   const { error, message } = await props.searchParams;
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 px-6 font-sans dark:bg-black">
+    <div className="flex flex-1 flex-col items-center justify-center px-6">
       <div className="w-full max-w-sm">
-        <h1 className="mb-1 text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
-          ResearchCanvas
-        </h1>
-        <p className="mb-6 text-sm text-zinc-500 dark:text-zinc-400">
+        <h1 className="mb-1 font-serif text-4xl text-text">ResearchCanvas</h1>
+        <p className="mb-6 text-sm text-muted">
           Sign in or create an account to analyze papers.
         </p>
 
         {error && (
-          <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
+          <p
+            className="mb-4 rounded-lg px-3 py-2 text-sm"
+            style={{ backgroundColor: "var(--mod-bg)", color: "var(--mod-fg)" }}
+          >
             {error}
           </p>
         )}
         {message && (
-          <p className="mb-4 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700 dark:border-green-900 dark:bg-green-950 dark:text-green-300">
+          <p
+            className="mb-4 rounded-lg px-3 py-2 text-sm"
+            style={{ backgroundColor: "var(--hi-bg)", color: "var(--hi-fg)" }}
+          >
             {message}
           </p>
         )}
 
-        <form className="flex flex-col gap-3">
+        <form className="glass flex flex-col gap-3 rounded-2xl p-6">
+          <label className="font-mono text-[10px] uppercase tracking-wide text-muted">
+            Email
+          </label>
           <input
             name="email"
             type="email"
             required
             placeholder="you@example.com"
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-black outline-none focus:border-black/30 dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+            className="rounded-lg border border-border bg-transparent px-3 py-2 text-sm text-text outline-none focus:border-accent"
           />
+          <label className="mt-1 font-mono text-[10px] uppercase tracking-wide text-muted">
+            Password
+          </label>
           <input
             name="password"
             type="password"
             required
             minLength={6}
-            placeholder="Password"
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-black outline-none focus:border-black/30 dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-50"
+            placeholder="••••••••"
+            className="rounded-lg border border-border bg-transparent px-3 py-2 text-sm text-text outline-none focus:border-accent"
           />
-          <div className="mt-1 flex gap-2">
+          <div className="mt-2 flex gap-2">
             <button
               formAction={signIn}
-              className="flex-1 rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+              className="flex-1 rounded-lg bg-accent px-4 py-2 font-mono text-sm text-white hover:opacity-90"
             >
               Sign in
             </button>
             <button
               formAction={signUp}
-              className="flex-1 rounded-lg border border-black/15 px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-black/5 dark:border-white/20 dark:text-zinc-50 dark:hover:bg-white/10"
+              className="flex-1 rounded-lg border border-accent px-4 py-2 font-mono text-sm text-accent hover:bg-accent/10"
             >
               Sign up
             </button>
