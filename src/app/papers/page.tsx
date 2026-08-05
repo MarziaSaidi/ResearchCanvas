@@ -22,7 +22,7 @@ export default async function PapersPage() {
         <h1 className="font-serif text-4xl text-text">My papers</h1>
 
         {papers && papers.length > 0 ? (
-          <ul className="mt-8 flex flex-col divide-y divide-border">
+          <ul className="glass mt-8 flex flex-col divide-y divide-border rounded-2xl px-5 py-2">
             {papers.map((p) => (
               <li key={p.id}>
                 <Link

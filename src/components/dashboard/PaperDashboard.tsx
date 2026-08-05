@@ -123,7 +123,8 @@ export function PaperDashboard({
       : null;
 
   return (
-    <article className="mx-auto w-full max-w-3xl px-6 py-14">
+    <article className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6">
+      <div className="glass rounded-[32px] p-6 sm:p-10">
       <div className="flex items-start justify-between gap-6">
         <div className="flex-1">
           <MetaLine meta={insights.meta} />
@@ -139,12 +140,16 @@ export function PaperDashboard({
       </div>
 
       {insights.isHealthRelated && (
-        <div
-          className="mt-6 rounded-xl px-4 py-3 text-sm"
-          style={{ backgroundColor: "var(--mod-bg)", color: "var(--mod-fg)" }}
-        >
-          <span className="font-medium">Summarizes research — not medical advice.</span>{" "}
-          Consult a qualified healthcare provider before acting on any findings.
+        <div className="glass mt-6 flex gap-3 rounded-2xl px-4 py-3 text-sm text-text">
+          <span className="text-accent" aria-hidden>
+            ⚠
+          </span>
+          <span>
+            <span className="font-medium">
+              Summarizes research — not medical advice.
+            </span>{" "}
+            Consult a qualified healthcare provider before acting on any findings.
+          </span>
         </div>
       )}
 
@@ -210,6 +215,7 @@ export function PaperDashboard({
           ↑ Analyze another
         </a>
       </footer>
+      </div>
     </article>
   );
 }

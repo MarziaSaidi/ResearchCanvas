@@ -3,10 +3,10 @@
 :root,
 :root[data-theme="light"] {
   --bg-grad: radial-gradient(130% 90% at 50% -10%, #fdeed4 0%, #f7dcb0 46%, #f2c98a 100%);
-  --surface: rgba(255, 251, 244, 0.5);
-  --glass-border: rgba(255, 255, 255, 0.55);
-  --glass-shadow: 0 12px 40px rgba(120, 74, 24, 0.14);
-  --glass-sheen: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --surface: rgba(255, 251, 243, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 14px 44px rgba(120, 74, 24, 0.16);
+  --glass-sheen: inset 0 1px 0 rgba(255, 255, 255, 0.65);
   --text: #241a0e;
   --muted: #7c6a52;
   --border: rgba(120, 74, 24, 0.16);
@@ -23,9 +23,9 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg-grad: radial-gradient(130% 90% at 50% -10%, #2c1d0e 0%, #1a1206 55%, #0e0a04 100%);
-    --surface: rgba(58, 40, 22, 0.42);
+    --surface: rgba(64, 44, 24, 0.36);
     --glass-border: rgba(255, 224, 176, 0.18);
-    --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    --glass-shadow: 0 14px 44px rgba(0, 0, 0, 0.44);
     --glass-sheen: inset 0 1px 0 rgba(255, 236, 205, 0.12);
     --text: #f4e9d7;
     --muted: #b09a7c;
@@ -43,9 +43,9 @@
 
 :root[data-theme="dark"] {
   --bg-grad: radial-gradient(130% 90% at 50% -10%, #2c1d0e 0%, #1a1206 55%, #0e0a04 100%);
-  --surface: rgba(58, 40, 22, 0.42);
+  --surface: rgba(64, 44, 24, 0.36);
   --glass-border: rgba(255, 224, 176, 0.18);
-  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  --glass-shadow: 0 14px 44px rgba(0, 0, 0, 0.44);
   --glass-sheen: inset 0 1px 0 rgba(255, 236, 205, 0.12);
   --text: #f4e9d7;
   --muted: #b09a7c;
@@ -85,7 +85,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--glass-border);
   border-radius: 24px;
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(26px) saturate(150%);
+  backdrop-filter: blur(26px) saturate(150%);
   box-shadow: var(--glass-sheen), var(--glass-shadow);
 }

@@ -57,31 +57,33 @@ export default async function Home() {
           <Analyzer />
         </div>
 
-        <div className="mt-16 border-t border-border pt-8">
-          <h2 className="font-mono text-xs uppercase tracking-wider text-muted">
+        <div className="mt-16">
+          <h2 className="mb-4 font-mono text-xs uppercase tracking-wider text-muted">
             Recent
           </h2>
-          {papers && papers.length > 0 ? (
-            <ul className="mt-4 flex flex-col divide-y divide-border">
-              {papers.map((p) => (
-                <li key={p.id}>
-                  <Link
-                    href={`/paper/${p.id}`}
-                    className="flex items-center justify-between gap-4 py-3 hover:opacity-80"
-                  >
-                    <span className="text-sm text-text">{p.title}</span>
-                    <span className="shrink-0 font-mono text-xs uppercase text-muted">
-                      {new Date(p.created_at).toLocaleDateString()}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-3 text-muted">
-              No papers yet — upload one to get started.
-            </p>
-          )}
+          <div className="glass rounded-2xl px-5 py-2">
+            {papers && papers.length > 0 ? (
+              <ul className="flex flex-col divide-y divide-border">
+                {papers.map((p) => (
+                  <li key={p.id}>
+                    <Link
+                      href={`/paper/${p.id}`}
+                      className="flex items-center justify-between gap-4 py-3 hover:opacity-80"
+                    >
+                      <span className="text-sm text-text">{p.title}</span>
+                      <span className="shrink-0 font-mono text-xs uppercase text-muted">
+                        {new Date(p.created_at).toLocaleDateString()}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="py-3 text-muted">
+                No papers yet — upload one to get started.
+              </p>
+            )}
+          </div>
         </div>
       </main>
     </>
