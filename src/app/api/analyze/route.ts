@@ -23,11 +23,23 @@ export async function POST(req: Request): Promise<Response> {
     return Response.json({ error: "Sign in to analyze papers" }, { status: 401 });
   }
 
+  // Reject oversized uploads early with a clear message (before parsing the body).
+  const contentLength = Number(req.headers.get("content-length") ?? 0);
+  if (contentLength > MAX_PDF_BYTES + 1_000_000) {
+    return Response.json(
+      { error: `File exceeds the ${MAX_PDF_BYTES / (1024 * 1024)}MB limit` },
+      { status: 413 },
+    );
+  }
+
   let form: FormData;
   try {
     form = await req.formData();
   } catch {
-    return Response.json({ error: "Expected multipart/form-data" }, { status: 400 });
+    return Response.json(
+      { error: "Could not read the upload — the file may be too large or malformed" },
+      { status: 400 },
+    );
   }
 
   const file = form.get("file");
